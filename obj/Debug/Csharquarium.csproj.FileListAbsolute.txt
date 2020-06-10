@@ -1,0 +1,7 @@
+C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\bin\Debug\Csharquarium.exe.config
+C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\bin\Debug\Csharquarium.exe
+C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\bin\Debug\Csharquarium.pdb
+C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\obj\Debug\Csharquarium.csprojAssemblyReference.cache
+C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\obj\Debug\Csharquarium.csproj.CoreCompileInputs.cache
+C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\obj\Debug\Csharquarium.exe
+C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\obj\Debug\Csharquarium.pdb
