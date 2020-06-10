@@ -16,20 +16,23 @@ namespace Csharquarium.Models
         {
             _specie = (HerbivoreSpecie)RNG.Next(0, Enum.GetNames(typeof(HerbivoreSpecie)).Length);
         }
-        public override string Specie
+        public Herbivore(string name, Genders gender, int age) : base(name, gender, age)
+        {
+            _specie = (HerbivoreSpecie)RNG.Next(0, Enum.GetNames(typeof(HerbivoreSpecie)).Length);
+        }
+        public override string Specie // get acces to specie read-only
         {
             get { return _specie.ToString(); }
         }
-        public void Eat(Alga victim)
+        public void Eat(Alga victim) // eat the alga
         {
             victim.GetDamage(2);
-            GetHeal(3);
+            this.GetHeal(3);
         }
 
         public void ChooseTarget(Alga[] victims)
         {
-            Target = RNG.Next(0, victims.Length);
-            WriteLine(this.name + " will eat alga number " + Target);
+            Target = RNG.Next(0, victims.Length);//choose the target randomly
         }
     }
 }

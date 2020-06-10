@@ -11,7 +11,7 @@ namespace Csharquarium.Models
         private Fish[] fishList;
         private Alga[] algaList;
         private int turn;
-        protected static Random RNG = new Random();
+        protected static Random RNG = new Random();// RNG for the aquarium
 
         public Aquarium()
         {
@@ -20,12 +20,11 @@ namespace Csharquarium.Models
             algaList = new Alga[0];
         }
 
-        public void AddFish(string name, Genders gender)
+        public void AddFish(string name, Genders gender) // add fishes to the aquarium
         {
             Fish newFish;
-            if (RNG.Next(0, 10) > 4 )
+            if (RNG.Next(0, 10) > 3) // choose a random type of fish
             {
-
                 newFish = new Herbivore(name, gender);
             }
             else
@@ -36,7 +35,7 @@ namespace Csharquarium.Models
             newFishList.Add(newFish);
             fishList = newFishList.ToArray();
         }
-        public void AddAlga()
+        public void AddAlga() //Add algas to the aquarium
         {
             Alga newAlga = new Alga();
             List<Alga> newAlgaList = algaList.ToList();
@@ -46,69 +45,36 @@ namespace Csharquarium.Models
 
         public void ShowFish()
         {
-            foreach (Fish fish in fishList)
+            foreach (Fish fish in fishList) //show the stats of the fishes
             {
                 WriteLine(fish.name + " / " + fish.Gender + " / " + fish.GetType() + " / PV : " + fish.PV + " / Age : " + fish.Age + " / Specie : " + fish.Specie);
             }
         }
-        public void ChooseTarget()
+        public void InflictDamage() //choose target from array
         {
             foreach (Fish fish in fishList)
             {
-                if (fish is Herbivore herb)
+                if (fish.PV < 5 & fish.Died == false)
                 {
-                    herb.ChooseTarget(algaList);
-                }
-                else if (fish is Carnivore carn)
-                {
-                    carn.ChooseTarget(fishList);
-                }
-                else
-                {
-                    WriteLine("This type of fish can't choose a target");
-                }
-            }
-        }
-        public void InflictDamage()
-        {
-            foreach (Fish fish in fishList)
-            {
-                if (fish is Carnivore carn)
-                {
-                    if (fishList.Length == 1)
+                    if (fish is Herbivore herb)
                     {
-                        WriteLine(fishList[0].name + " died hungry");
-                        WriteLine("Your aquarium died");
-                        fishList[0] = null;
+                        if (algaList.Length > 0)
+                        {
+                            herb.ChooseTarget(algaList);
+                            herb.Eat(algaList[fish.Target]);
+                        }
                     }
-                    else if (fishList.Length > 0 && fishList[carn.Target] != null)
+                    else if (fish is Carnivore carn)
                     {
+                        carn.ChooseTarget(fishList);
                         carn.Eat(fishList[carn.Target]);
-                        if (fishList[carn.Target].Died)
-                        {
-                            fishList[carn.Target] = null;
-                        }
                     }
                 }
-                else if (fish is Herbivore herb)
-                {
-                    if (algaList.Length > 0 && algaList[fish.Target] != null)
-                    {
-                        herb.Eat(algaList[fish.Target]);
-                        if (algaList[fish.Target].Died)
-                        {
-                            algaList[fish.Target] = null;
-                        }
-                    }
-                }
-
             }
-            fishList = fishList.Where(fish => fish != null).ToArray();//Removes all null from array
-            algaList = algaList.Where(alga => alga != null).ToArray();
         }
-        public void AddAge()
+        public void RemoveDead()
         {
-            foreach (Alga alga in algaList)
+            foreach (Alga alga in algaList) //add the age of the fish
             {
                 alga.AddAge();
             }
@@ -116,17 +82,18 @@ namespace Csharquarium.Models
             {
                 fish.AddAge();
             }
-        }
+            fishList = fishList.Where(fish => fish.Died == false).ToArray(); //remove from array all Died Fish
+            algaList = algaList.Where(alga => alga.Died == false).ToArray();
+        } //clear the arrays from dead fishes etc.
         public void PassTurn()
         {
-            turn++;
             WriteLine("Turn " + turn);
             WriteLine("You've got " + algaList.Count() + " algas");
             WriteLine("You've got " + fishList.Count() + " fishes");
             ShowFish();
-            ChooseTarget();
-            //InflictDamage();
-            AddAge();
+            InflictDamage();
+            RemoveDead();
+            turn++;
         }
     }
 }

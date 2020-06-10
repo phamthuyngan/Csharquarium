@@ -18,14 +18,19 @@ namespace Csharquarium.Models
             name = newName;
             Gender = newGender;
         }
-        public int Target
+        public Fish(string newName, Genders newGender, int age) : base(age, 10) // construct the Fish if we input an age value
+        { 
+            name = newName;
+            Gender = newGender;
+        }
+        public int Target // index of the target in the array
         {
             get { return _target; }
             protected set { _target = value; }
         }
 
-        public virtual string Specie { get; set; }
-        public Genders Gender
+        public virtual string Specie { get; set; } // eache fish has a specie
+        public Genders Gender // random gender 
         {
             get
             {
@@ -37,15 +42,15 @@ namespace Csharquarium.Models
             }
         }
 
-        public override void AddAge()
+        public override void AddAge() //get old
         {
             GetDamage(1);
             Age++;
         }
 
-        public void Eat()
+        public void Eat()//eat another LivinBeing
         { }
-        public void ChooseTarget()
+        public void ChooseTarget()//Choose the next thing to eat
         { }
     }
 }

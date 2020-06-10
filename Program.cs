@@ -13,7 +13,7 @@ namespace Csharquarium
         static void Main(string[] args)
         {
             Aquarium aqua = new Aquarium();
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 1; i++)
             {
                 aqua.AddAlga();
             }

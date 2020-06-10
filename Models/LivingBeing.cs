@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace Csharquarium.Models
 {
-    class LivingBeing
+    class LivingBeing //class parent of fishes and algas
     {
-        protected static Random RNG = new Random();
+        protected static Random RNG = new Random(); // RNG for algas and fishes
         private int _age;
         private int _pv;
-        public bool Died { get; private set; }
+        public bool Died { get; private set; } //is it dead? Poke it with a stick
 
         public int PV
         {
             get { return _pv; }
             private set
             {
-                if (value <= 0)
+                if (value <= 0) // dead if not sufficient PV
                 {
                     Died = true;
-                    return;
+                    _pv = 0;
                 }
                 else
                 {
@@ -35,7 +35,7 @@ namespace Csharquarium.Models
             get { return _age; }
             protected set
             {
-                if (_age > 20)
+                if (_age > 19) // dead if too old
                 {
                     Died = true;
                     return;
@@ -57,13 +57,20 @@ namespace Csharquarium.Models
             PV = newPV;
         }
 
-        public void GetDamage(int damage)
+        public void GetDamage(int damage)// receive damage
         {
-            PV -= damage;
+            if (damage > 0)// can't inflict negative damage
+            {
+                PV -= damage;
+            }
+            else
+            {
+                throw new InvalidOperationException("Your value must be positive");
+            }
         }
-        public void GetHeal(int heal)
+        public void GetHeal(int heal)//receive life point
         {
-            if (heal > 0)
+            if (heal > 0) // can't inflict negative heal point
             {
                 PV += heal;
             }
@@ -73,7 +80,7 @@ namespace Csharquarium.Models
             }
         }
 
-        public virtual void AddAge()
+        public virtual void AddAge() // get old
         { }
     }
 }
