@@ -12,23 +12,26 @@ namespace Csharquarium
     {
         static void Main(string[] args)
         {
-            Aquarium aqua = new Aquarium();
+            Game game = new Game();
+
+
             for (int i = 0; i < 1; i++)
             {
-                aqua.AddAlga();
+                game.AddAlga();
             }
-            aqua.AddFish("John Doe", Genders.Male);
-            aqua.AddFish("Matrix", Genders.Female);
-            aqua.AddFish("Truc", Genders.Female);
-            aqua.AddFish("Machin", Genders.Male);
-            aqua.AddFish("Macro", Genders.Male);
-            aqua.AddFish("Bar", Genders.Female);
-            aqua.AddFish("Narval", Genders.Male);
-            aqua.AddFish("Gupi", Genders.Female);
+            game.AddFish("John Doe", Genders.Male);
+            game.AddFish("Matrix", Genders.Female);
+            game.AddFish("Truc", Genders.Female);
+            game.AddFish("Machin", Genders.Male);
+            game.AddFish("Macro", Genders.Male);
+            game.AddFish("Bar", Genders.Female);
+            game.AddFish("Narval", Genders.Male);
+            game.AddFish("Gupi", Genders.Female);
+            game.AddFish("Test");
 
             do
             {
-                aqua.PassTurn();
+                game.PassTurn();
             } while (ReadLine() != "x");
 
         }

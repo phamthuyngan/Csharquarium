@@ -10,6 +10,9 @@ namespace Csharquarium.Models
     {
         public Alga() : base()
         { }
+        public Alga(int newAge, int newPV) : base(newAge, newPV)
+        {
+        }
         public override void AddAge()
         {
             GetHeal(1);

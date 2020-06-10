@@ -43,12 +43,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game.cs" />
     <Compile Include="Models\Alga.cs" />
     <Compile Include="Models\Aquarium.cs" />
     <Compile Include="Models\Carnivore.cs" />
     <Compile Include="Models\Fish.cs" />
     <Compile Include="Models\Herbivore.cs" />
+    <Compile Include="Models\Interfaces\IHermaphrodite.cs" />
+    <Compile Include="Models\Interfaces\IMonosex.cs" />
+    <Compile Include="Models\Interfaces\IOpportunist.cs" />
     <Compile Include="Models\LivingBeing.cs" />
+    <Compile Include="Models\Species\Bar.cs" />
+    <Compile Include="Models\Species\Carp.cs" />
+    <Compile Include="Models\Species\ClownFish.cs" />
+    <Compile Include="Models\Species\Grouper.cs" />
+    <Compile Include="Models\Species\Sole.cs" />
+    <Compile Include="Models\Species\Tuna.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

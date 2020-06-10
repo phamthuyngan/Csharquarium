@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Csharquarium.Models
 {
+    delegate void Death(LivingBeing dead);
     class LivingBeing //class parent of fishes and algas
     {
         protected static Random RNG = new Random(); // RNG for algas and fishes
         private int _age;
         private int _pv;
-        public bool Died { get; private set; } //is it dead? Poke it with a stick
+        public event Death death;
 
         public int PV
         {
@@ -20,8 +23,9 @@ namespace Csharquarium.Models
             {
                 if (value <= 0) // dead if not sufficient PV
                 {
-                    Died = true;
                     _pv = 0;
+                    death(this); // call the function that remove from list
+                    return;
                 }
                 else
                 {
@@ -35,9 +39,9 @@ namespace Csharquarium.Models
             get { return _age; }
             protected set
             {
-                if (_age > 19) // dead if too old
+                if (_age > 19)
                 {
-                    Died = true;
+                    death(this); // call the function that remove from list
                     return;
                 }
                 _age = value;
@@ -49,12 +53,13 @@ namespace Csharquarium.Models
         {
             Age = 0;
             PV = 10;
-            Died = false;
+            death = null;
         }
-        public LivingBeing(int newAge, int newPV) : this()
+        public LivingBeing(int newAge, int newPV)
         {
             Age = newAge;
             PV = newPV;
+            death = null;
         }
 
         public void GetDamage(int damage)// receive damage

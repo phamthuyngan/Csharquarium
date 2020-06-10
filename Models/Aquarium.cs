@@ -8,92 +8,126 @@ namespace Csharquarium.Models
 {
     class Aquarium
     {
-        private Fish[] fishList;
-        private Alga[] algaList;
-        private int turn;
+        public Fish[] FishList { get; private set; }
+        public Alga[] AlgaList { get; private set; }
         protected static Random RNG = new Random();// RNG for the aquarium
 
         public Aquarium()
         {
-            turn = 0;
-            fishList = new Fish[0];
-            algaList = new Alga[0];
+            FishList = new Fish[0];
+            AlgaList = new Alga[0];
         }
 
         public void AddFish(string name, Genders gender) // add fishes to the aquarium
         {
-            Fish newFish;
-            if (RNG.Next(0, 10) > 3) // choose a random type of fish
-            {
-                newFish = new Herbivore(name, gender);
-            }
-            else
-            {
-                newFish = new Carnivore(name, gender);
-            }
-            List<Fish> newFishList = fishList.ToList();
-            newFishList.Add(newFish);
-            fishList = newFishList.ToArray();
+            SpeciesEnum randomSpecie = (SpeciesEnum)RNG.Next(0, Enum.GetNames(typeof(SpeciesEnum)).Length);
+            Type type = Type.GetType("Csharquarium.Models.Species." + randomSpecie.ToString());
+            Fish newFish = (Fish)Activator.CreateInstance(type, name, gender);
+            AddToArray(newFish);
+        }
+        public void AddFish(string name) // add fishes to the aquarium
+        {
+            SpeciesEnum randomSpecie = (SpeciesEnum)RNG.Next(0, Enum.GetNames(typeof(SpeciesEnum)).Length);
+            Type type = Type.GetType("Csharquarium.Models.Species." + randomSpecie.ToString());
+            Fish newFish = (Fish)Activator.CreateInstance(type, name);
+            AddToArray(newFish);
         }
         public void AddAlga() //Add algas to the aquarium
         {
             Alga newAlga = new Alga();
-            List<Alga> newAlgaList = algaList.ToList();
-            newAlgaList.Add(newAlga);
-            algaList = newAlgaList.ToArray();
+            AddToArray(newAlga);
         }
-
-        public void ShowFish()
+        public void AddAlga(int newAge, int newPV) //Add algas to the aquarium
         {
-            foreach (Fish fish in fishList) //show the stats of the fishes
+            Alga newAlga = new Alga(newAge, newPV);
+            AddToArray(newAlga);
+        }
+        private void AddToArray(LivingBeing newElement) // add nes element to the right array
+        {
+            newElement.death += RemoveDead;
+            if (newElement is Fish fish)
             {
-                WriteLine(fish.name + " / " + fish.Gender + " / " + fish.GetType() + " / PV : " + fish.PV + " / Age : " + fish.Age + " / Specie : " + fish.Specie);
+                List<Fish> newFishList = FishList.ToList();
+                newFishList.Add(fish);
+                FishList = newFishList.ToArray();
+            }
+            else if (newElement is Alga alga)
+            {
+                List<Alga> newAlgaList = AlgaList.ToList();
+                newAlgaList.Add(alga);
+                AlgaList = newAlgaList.ToArray();
             }
         }
-        public void InflictDamage() //choose target from array
+        public void GiveBirth(string name, Fish parent)
         {
-            foreach (Fish fish in fishList)
+            Type type = parent.GetType();
+            Fish newFish = (Fish)Activator.CreateInstance(type, name);
+
+            List<Fish> newFishList = FishList.ToList();
+            newFishList.Add(newFish);
+            FishList = newFishList.ToArray();
+        }
+        private void LivingBehaviour() //choose target from array
+        {
+            foreach (Fish fish in FishList)
             {
-                if (fish.PV < 5 & fish.Died == false)
+                if (fish.PV < 5)
                 {
                     if (fish is Herbivore herb)
                     {
-                        if (algaList.Length > 0)
+                        if (AlgaList.Length > 0)
                         {
-                            herb.ChooseTarget(algaList);
-                            herb.Eat(algaList[fish.Target]);
+                            herb.ChooseTarget(AlgaList);
+                            herb.Eat(AlgaList[fish.Target]);
                         }
                     }
                     else if (fish is Carnivore carn)
                     {
-                        carn.ChooseTarget(fishList);
-                        carn.Eat(fishList[carn.Target]);
+                        carn.ChooseTarget(FishList);
+                        carn.Eat(FishList[carn.Target]);
                     }
+                }
+                else if (fish.PV >= 5 & fish.ChooseMate(FishList)) // give birth to a new fish 
+                {
+                    GiveBirth("Child", fish);
+                }
+            }
+            foreach (Alga alga in AlgaList)
+            {
+                if (alga.PV >= 10)
+                {
+                    AddAlga(0, 5);
+                    alga.GetDamage(5);
                 }
             }
         }
-        public void RemoveDead()
+        private void RemoveDead(LivingBeing dead)
         {
-            foreach (Alga alga in algaList) //add the age of the fish
+            if (dead is Fish)
+            {
+                FishList = FishList.Where(fish => fish != dead).ToArray(); //remove from array all Died Fish
+            }
+            else if (dead is Alga)
+            {
+                AlgaList = AlgaList.Where(alga => alga != dead).ToArray();
+            }
+            WriteLine(dead.ToString() + " died");
+        }
+        private void AddAge()
+        {
+            foreach (Alga alga in AlgaList) //add the age of the fish
             {
                 alga.AddAge();
             }
-            foreach (Fish fish in fishList)
+            foreach (Fish fish in FishList)
             {
                 fish.AddAge();
             }
-            fishList = fishList.Where(fish => fish.Died == false).ToArray(); //remove from array all Died Fish
-            algaList = algaList.Where(alga => alga.Died == false).ToArray();
-        } //clear the arrays from dead fishes etc.
-        public void PassTurn()
+        }
+        public void ExecuteActions()
         {
-            WriteLine("Turn " + turn);
-            WriteLine("You've got " + algaList.Count() + " algas");
-            WriteLine("You've got " + fishList.Count() + " fishes");
-            ShowFish();
-            InflictDamage();
-            RemoveDead();
-            turn++;
+            LivingBehaviour();
+            AddAge();
         }
     }
 }
