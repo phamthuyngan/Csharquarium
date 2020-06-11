@@ -9,7 +9,6 @@ namespace Csharquarium.Models
 {
     class Herbivore : Fish
     {
-
         public Herbivore(string name) : base(name)
         {
         }
@@ -17,16 +16,21 @@ namespace Csharquarium.Models
         {
         }
         public Herbivore(string newName, Genders newGender, int age) : base(newName, newGender, age)
-        { }
-        public void Eat(Alga victim) // eat the alga
         {
-            victim.GetDamage(2);
-            this.GetHeal(3);
+        }
+        protected void Eat(Alga victim) // eat the alga
+        {
+            victim.GetDamage(2); // inflicts damage to victim
+            this.GetHeal(3); // gets PV from eating
         }
 
-        public void ChooseTarget(Alga[] victims)
+        public void Attack(Alga[] victims)
         {
-            Target = RNG.Next(0, victims.Length);//choose the target randomly
+            if (WasAttacked == false & PV < 5 & victims.Length > 0)
+            {
+                Target = RNG.Next(0, victims.Length);//choose the target randomly
+                Eat(victims[Target]); // eat the alga
+            }
         }
     }
 }

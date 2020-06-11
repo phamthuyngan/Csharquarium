@@ -7,7 +7,7 @@ using Csharquarium.Models.Interfaces;
 
 namespace Csharquarium.Models.Species
 {
-    class Tuna : Carnivore, IMonosex
+    class Tuna : Carnivore
     {
         public Tuna(string name) : base(name) { }
         public Tuna(string name, Genders gender) : base(name, gender) { }

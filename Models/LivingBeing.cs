@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 namespace Csharquarium.Models
 {
     delegate void Death(LivingBeing dead);
-    class LivingBeing //class parent of fishes and algas
+    
+    class LivingBeing : IDisposable //class parent of fishes and algas
     {
+        
+        public event Death death;
         protected static Random RNG = new Random(); // RNG for algas and fishes
         private int _age;
         private int _pv;
-        public event Death death;
 
         public int PV
         {
@@ -24,6 +26,7 @@ namespace Csharquarium.Models
                 if (value <= 0) // dead if not sufficient PV
                 {
                     _pv = 0;
+                    
                     death(this); // call the function that remove from list
                     return;
                 }
@@ -62,7 +65,7 @@ namespace Csharquarium.Models
             death = null;
         }
 
-        public void GetDamage(int damage)// receive damage
+        public virtual void GetDamage(int damage)// receive damage
         {
             if (damage > 0)// can't inflict negative damage
             {
@@ -86,6 +89,8 @@ namespace Csharquarium.Models
         }
 
         public virtual void AddAge() // get old
+        { }
+        public void Dispose() // flag the class as disposable by the garbage collector
         { }
     }
 }

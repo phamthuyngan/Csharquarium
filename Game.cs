@@ -39,6 +39,10 @@ namespace Csharquarium
         {
             scene.AddAlga();
         }
+        public void AddAlga(int age, int pv)
+        {
+            scene.AddAlga(age, pv);
+        }
         public void AddFish(string name, Genders gender)
         {
             scene.AddFish(name, gender);
@@ -46,6 +50,10 @@ namespace Csharquarium
         public void AddFish(string name)
         {
             scene.AddFish(name);
+        }
+        public void Save()
+        {
+
         }
     }
 }

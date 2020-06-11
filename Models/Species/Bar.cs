@@ -12,5 +12,6 @@ namespace Csharquarium.Models.Species
         public Bar(string name) : base(name){}
         public Bar(string name, Genders gender) : base(name, gender) { }
         public Bar(string newName, Genders newGender, int age) : base(newName, newGender, age){ }
+        
     }
 }

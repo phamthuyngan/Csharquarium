@@ -7,7 +7,7 @@ using Csharquarium.Models.Interfaces;
 
 namespace Csharquarium.Models.Species
 {
-    class Carp : Herbivore, IMonosex
+    class Carp : Herbivore
     {
         public Carp(string name) : base(name) { }
         public Carp(string name, Genders gender) : base(name, gender) { }

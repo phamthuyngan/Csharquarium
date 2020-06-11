@@ -1,4 +1,5 @@
-﻿using Csharquarium.Models.Species;
+﻿using Csharquarium.Models.Interfaces;
+using Csharquarium.Models.Species;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,46 +8,37 @@ using System.Threading.Tasks;
 
 namespace Csharquarium.Models
 {
-    public enum Genders { Female, Male };
-    public enum SpeciesEnum { Grouper, Tuna, ClownFish, Sole, Bar, Carp };
+    enum Genders { Female, Male };
+    enum SpeciesEnum { Grouper, Tuna, ClownFish, Sole, Bar, Carp };
+
+    delegate void ReproduceFish(string name, Fish parent);
     class Fish : LivingBeing
     {
-        //public static Dictionary<string, Type> specieDico = new Dictionary<string, Type>
-        //    { 
-        //    { "Grouper", typeof(Grouper)}
-        //};
+        public bool WasAttacked { get; private set; }
         public string name;
-        private int _target;
-        private bool _gender;
-        public int MateIndex { get; protected set; }
+        public event ReproduceFish Reproduce;
+        protected int Target { get; set; }
+        protected bool _gender;
 
         public Fish(string newName) : base()
         {
             name = newName;
-            Gender = (Genders)RNG.Next(0, 2);
+            Gender = (Genders)RNG.Next(0, 2); // random gender if not spacified
+            Reproduce = null;
+            WasAttacked = false;
         }
         public Fish(string newName, Genders newGender) : this(newName)
         {
             Gender = newGender;
+            Reproduce = null;
         }
         public Fish(string newName, Genders newGender, int age) : base(age, 10) // construct the Fish if we input an age value
         {
             name = newName;
             Gender = newGender;
+            Reproduce = null;
+            WasAttacked = false;
         }
-        public int Target // index of the target in the array
-        {
-            get { return _target; }
-            protected set { _target = value; }
-        }
-
-        //public SpeciesEnum Specie // eache fish has a specie
-        //{
-        //    get
-        //    {
-        //        return (SpeciesEnum)Enum.Parse(typeof(SpeciesEnum), this.GetType().ToString());
-        //    }
-        //}
         public Genders Gender // random gender 
         {
             get
@@ -58,29 +50,46 @@ namespace Csharquarium.Models
                 _gender = Convert.ToBoolean((int)value);
             }
         }
-
         public override void AddAge() //get old
         {
             GetDamage(1);
             Age++;
+            WasAttacked = false;
+            if (this is IHermaphrodite & Age > 0  & Age % 10 == 0 ) // Hermaphrodite behaviour when switch the gender by age
+            {
+                _gender = !_gender;
+                Console.WriteLine(this.name + " changed gender, it's now a " + Gender.ToString());
+            }
         }
 
-        public void Eat()//eat another LivinBeing
+        protected virtual void Eat()//eat another LivinBeing
         { }
-        public void ChooseTarget()//Choose the next thing to eat
+        public void Attack()//Choose the next thing to eat
         { }
-
-        public bool ChooseMate(Fish[] list)
+        public override void GetDamage(int damage)
         {
-            if (list.Length > 1)
+            base.GetDamage(damage);
+            WasAttacked = true;
+        }
+
+        public void Mate(Fish[] list)
+        {
+            if (list.Length > 1 & WasAttacked == false & PV >= 5)
             {
-                MateIndex = RNG.Next(0, list.Length);
-                if (list[MateIndex] != this & list[MateIndex].GetType() == this.GetType() & list[MateIndex].Gender != this.Gender)
+                int MateIndex = RNG.Next(0, list.Length);
+                if (list[MateIndex] != this & list[MateIndex].GetType() == this.GetType())
                 {
-                    return true;
+                    if (this is IOpportunist & list[MateIndex].Gender == this.Gender)
+                    {
+                        _gender = !_gender;
+                        Console.WriteLine(this.name + " is now an opportunist, it's now a " + Gender.ToString());
+                    }
+                    if (list[MateIndex].Gender != this.Gender)
+                    {
+                        Reproduce("Child", this);
+                    }
                 }
             }
-            return false;
         }
     }
 }

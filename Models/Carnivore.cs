@@ -19,29 +19,27 @@ namespace Csharquarium.Models
         public Carnivore(string newName, Genders newGender, int age) : base(newName, newGender, age)
         { }
 
-        public void Eat(Fish victim) //PV management when eating
+        protected void Eat(Fish victim) //PV management when eating
         {
-            if (targetExist) //if there is a possible target
-            {
-                WriteLine(this.name + " ate " + victim.name);
+                WriteLine(this.name + " bite " + victim.name);
                 victim.GetDamage(4);
                 this.GetHeal(5);
-            }
         }
-        public void ChooseTarget(Fish[] victims) 
+        public void Attack(Fish[] victims)
         {
             targetExist = Array.Exists(victims, fish => fish.GetType() != this.GetType()); // check if there is another specie existing in the aquarium
-            if (targetExist == false)
-            {
-                Target = 0;
-                return;
-            }
-            else
+            if (targetExist & !WasAttacked & PV < 5)
             {
                 do
                 {
                     Target = RNG.Next(0, victims.Length); // choose a random index
                 } while (victims[Target] == this | this.GetType() == victims[Target].GetType());// if the fish is not this and not the same specie
+                Eat(victims[Target]); //Attack the target
+            }
+            else
+            {
+                //Target = 0;
+                return;
             }
         }
     }

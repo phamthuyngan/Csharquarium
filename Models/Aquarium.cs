@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Csharquarium.Models.Interfaces;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,16 +7,27 @@ using static System.Console;
 
 namespace Csharquarium.Models
 {
+    delegate void DelegateAlga(Alga[] victims);
+    delegate void DelegateFish(Fish[] victims);
+    delegate void DelegateReproduceAlga();
     class Aquarium
     {
         public Fish[] FishList { get; private set; }
         public Alga[] AlgaList { get; private set; }
-        protected static Random RNG = new Random();// RNG for the aquarium
+        private static Random RNG = new Random();// RNG for the aquarium
+        private event DelegateAlga AttackHerb;
+        private event DelegateReproduceAlga ReproduceAlga;
+        private event DelegateFish AttackCarn;
+        private event DelegateFish ReproduceFish;
 
         public Aquarium()
         {
             FishList = new Fish[0];
             AlgaList = new Alga[0];
+            AttackHerb = null;
+            AttackCarn = null;
+            ReproduceFish = null;
+            ReproduceAlga = null;
         }
 
         public void AddFish(string name, Genders gender) // add fishes to the aquarium
@@ -32,7 +44,7 @@ namespace Csharquarium.Models
             Fish newFish = (Fish)Activator.CreateInstance(type, name);
             AddToArray(newFish);
         }
-        public void AddAlga() //Add algas to the aquarium
+        public void AddAlga() //add algas to the aquarium
         {
             Alga newAlga = new Alga();
             AddToArray(newAlga);
@@ -42,80 +54,92 @@ namespace Csharquarium.Models
             Alga newAlga = new Alga(newAge, newPV);
             AddToArray(newAlga);
         }
-        private void AddToArray(LivingBeing newElement) // add nes element to the right array
+        private void AddToArray(LivingBeing newElement) // add new element to the right array
         {
-            newElement.death += RemoveDead;
             if (newElement is Fish fish)
             {
-                List<Fish> newFishList = FishList.ToList();
+                List<Fish> newFishList = FishList.ToList(); // add fish to array
                 newFishList.Add(fish);
                 FishList = newFishList.ToArray();
+
+                fish.Reproduce += delegate (string name, Fish parent) // link the reproduction actionby an anonymous delegate to the fish delegate 
+                {
+                    Fish newFish = (Fish)Activator.CreateInstance(parent.GetType(), name);
+                    AddToArray(newFish);
+                };
+                ReproduceFish += fish.Mate; // add the mating action to the reproduction general delegate
+
+                if (fish is Carnivore carn) // add the attacking action to the attacking general delegate
+                {
+                    AttackCarn += carn.Attack;
+                }
+                else if (fish is Herbivore herb)
+                {
+                    AttackHerb += herb.Attack;
+                }
             }
-            else if (newElement is Alga alga)
+            else if (newElement is Alga alga) // Add the alga to the array
             {
                 List<Alga> newAlgaList = AlgaList.ToList();
                 newAlgaList.Add(alga);
                 AlgaList = newAlgaList.ToArray();
-            }
-        }
-        public void GiveBirth(string name, Fish parent)
-        {
-            Type type = parent.GetType();
-            Fish newFish = (Fish)Activator.CreateInstance(type, name);
 
-            List<Fish> newFishList = FishList.ToList();
-            newFishList.Add(newFish);
-            FishList = newFishList.ToArray();
+                alga.Reproduce += AddAlga; // add the reproduction action to the alga delegate
+                ReproduceAlga += alga.Grow; // add the alga's reproduction action to the general delegate
+            }
+            newElement.death += RemoveDead; // Link the function that removes the element when it dies to the element's delegate
         }
         private void LivingBehaviour() //choose target from array
         {
-            foreach (Fish fish in FishList)
+            if (AlgaList.Length > 0) // if there is some alga
             {
-                if (fish.PV < 5)
+                if (AttackHerb != null)
                 {
-                    if (fish is Herbivore herb)
-                    {
-                        if (AlgaList.Length > 0)
-                        {
-                            herb.ChooseTarget(AlgaList);
-                            herb.Eat(AlgaList[fish.Target]);
-                        }
-                    }
-                    else if (fish is Carnivore carn)
-                    {
-                        carn.ChooseTarget(FishList);
-                        carn.Eat(FishList[carn.Target]);
-                    }
+                    AttackHerb(AlgaList); // make herbivore eat
                 }
-                else if (fish.PV >= 5 & fish.ChooseMate(FishList)) // give birth to a new fish 
+                if (ReproduceAlga != null)
                 {
-                    GiveBirth("Child", fish);
+                    ReproduceAlga(); // alga multiplying
                 }
             }
+            if (FishList.Length > 1) // if there is several fishes
+            {
+                AttackCarn(FishList); // make carnivores attack
+                ReproduceFish(FishList);// fish multiplying
+            }
+
+        }
+
+        private void RemoveDead(LivingBeing dead) // removing an element from the scene
+        {
+            if (dead is Fish fish)
+            {
+                FishList = FishList.Where(diedFish => diedFish != dead).ToArray(); //remove from array all died Fish
+
+                if (fish is Carnivore carn)// remove from general delegate the action so it's not triggered anymore
+                {
+                    AttackCarn -= carn.Attack; 
+                }
+                else if (fish is Herbivore herb)
+                {
+                    AttackHerb -= herb.Attack;
+                }
+                ReproduceFish -= fish.Mate;
+
+                WriteLine(fish.name.ToString() + " died");
+            }
+            else if (dead is Alga alga)
+            {
+                AlgaList = AlgaList.Where(diedAlga => diedAlga != dead).ToArray(); // remove from array all died algas
+                ReproduceAlga -= alga.Grow; // remove from general delegate the growing action
+
+                WriteLine("An alga disapeared");
+            }
+            dead.Dispose(); // make the object disposable for garbage collector
+        }
+        private void AddAge() // make objects get older
+        {
             foreach (Alga alga in AlgaList)
-            {
-                if (alga.PV >= 10)
-                {
-                    AddAlga(0, 5);
-                    alga.GetDamage(5);
-                }
-            }
-        }
-        private void RemoveDead(LivingBeing dead)
-        {
-            if (dead is Fish)
-            {
-                FishList = FishList.Where(fish => fish != dead).ToArray(); //remove from array all Died Fish
-            }
-            else if (dead is Alga)
-            {
-                AlgaList = AlgaList.Where(alga => alga != dead).ToArray();
-            }
-            WriteLine(dead.ToString() + " died");
-        }
-        private void AddAge()
-        {
-            foreach (Alga alga in AlgaList) //add the age of the fish
             {
                 alga.AddAge();
             }

@@ -50,7 +50,6 @@
     <Compile Include="Models\Fish.cs" />
     <Compile Include="Models\Herbivore.cs" />
     <Compile Include="Models\Interfaces\IHermaphrodite.cs" />
-    <Compile Include="Models\Interfaces\IMonosex.cs" />
     <Compile Include="Models\Interfaces\IOpportunist.cs" />
     <Compile Include="Models\LivingBeing.cs" />
     <Compile Include="Models\Species\Bar.cs" />
