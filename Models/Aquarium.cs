@@ -59,8 +59,7 @@ namespace Csharquarium.Models
         }
         public void AddAlga() //add algas to the aquarium
         {
-            Alga newAlga = new Alga();
-            AddToArray(newAlga);
+            AddAlga(0, 10);
         }
         public void AddAlga(int newAge, int newPV) //Add algas to the aquarium
         {

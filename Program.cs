@@ -1,9 +1,11 @@
 ﻿using Csharquarium.Models;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 
 namespace Csharquarium
 {
+    delegate void Log(string message);
     class Program
     {
         public static Dictionary<string, SpeciesEnum> specieTranslation = new Dictionary<string, SpeciesEnum>
@@ -17,8 +19,10 @@ namespace Csharquarium
         };
         static void Main(string[] args)
         {
+            Log Log = null;
             Game game = new Game();
             game.saveDefaultPath = @"C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\"; // default directory to save 
+            Log += game.renderer.Render;
 
             string input = null;
             string path = null;
@@ -39,7 +43,7 @@ namespace Csharquarium
             //game.AddFish("Gupi", Genders.Female);
             //game.AddFish("Test");
             game.ShowGame();
-            Console.WriteLine("Press ENTER to start the game");
+            Log("Press ENTER to start the game");
 
             do
             {
@@ -49,7 +53,7 @@ namespace Csharquarium
                     switch (input.ToUpper())
                     {
                         case "SAVE":
-                            game.renderer.Render("Please write the path of your save file and press ENTER or just press ENTER if you want to save to the default path");
+                            Log("Please write the path of your save file and press ENTER or just press ENTER if you want to save to the default path");
                             path = Console.ReadLine();
                             if (path == "")
                             {
@@ -62,7 +66,7 @@ namespace Csharquarium
 
                             break;
                         case "LOAD":
-                            game.renderer.Render("Please write the path of your save file and press ENTER or just press ENTER if you want to load from the default path");
+                            Log("Please write the path of your save file and press ENTER or just press ENTER if you want to load from the default path");
                             path = Console.ReadLine();
                             if (path == "")
                             {
@@ -106,13 +110,12 @@ namespace Csharquarium
                                     for (int i = 0; i < algasToAdd; i++)
                                     {
                                         game.AddAlga(ageOfAlga, 10); // add alga to the game
-                                        game.renderer.Render("Alga(s) added, press ENTER to continue");
+                                        Log("Alga(s) added, press ENTER to continue");
                                     }
                                 }
                                 else
                                 {
                                     throw new InvalidOperationException("Your alga's parameters are not correctly encoded, please try again with better synthax");
-                                    //game.renderer.Render("Your alga's parameters are not correctly encoded, please try again with better synthax");
                                 }
                             }
                             else if (input.Contains(",") & input.ToUpper().Contains("AN"))
@@ -137,29 +140,25 @@ namespace Csharquarium
                                     if (specieTranslation.ContainsKey(parameters[1]) & ageFinal != null) // check if the specie encoded is an existing specie and if the age is not null
                                     {
                                         game.AddFish(parameters[0], specieTranslation[parameters[1]], int.Parse(ageFinal.ToString())); // add the fish to the game
-                                        game.renderer.Render("Fish added, press ENTER to continue");
+                                        Log("Fish added, press ENTER to continue");
                                     }
                                     else if (!specieTranslation.ContainsKey(parameters[1]))
                                     {
                                         throw new InvalidOperationException("The name of your fish's specie is spelled wrong. Please try again with a better spelling");
-                                        //game.renderer.Render("The name of your fish's specie is spelled wrong. Please try again with a better spelling");
                                     }
                                     else if (ageFinal == null)
                                     {
                                         throw new InvalidOperationException("The age of your fish is not correctly encoded. Please try again with a better spelling");
-                                        //game.renderer.Render("The age of your fish is not correctly encoded. Please try again with a better spelling");
                                     }
                                 }
                                 else
                                 {
                                     throw new InvalidOperationException("Your fish's parameters are not correctly encoded, please try again with better synthax");
-                                    //game.renderer.Render("Your fish's parameters are not correctly encoded, please try again with better synthax");
                                 }
                             }
                             else
                             {
                                 throw new InvalidOperationException("The input you wrote seems wrong. Please check the syntax and write it correctly");
-                                //game.renderer.Render("The input you wrote seems wrong. Please check the syntax and write it correctly");
                             }
                             break;
                     }
