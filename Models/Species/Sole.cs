@@ -11,6 +11,9 @@ namespace Csharquarium.Models.Species
     {
         public Sole(string name) : base(name) { }
         public Sole(string name, Genders gender) : base(name, gender) { }
+        public Sole(string newName, int newAge) : base(newName, newAge) { }
         public Sole(string newName, Genders newGender, int age) : base(newName, newGender, age) { }
+        public Sole(string newName, int age, int pv, Genders newGender, bool wasAttacked, int target) : base(newName, age, pv, newGender, wasAttacked, target)
+        { }
     }
 }

@@ -10,10 +10,13 @@ namespace Csharquarium.Models
     delegate void DelegateAlga(Alga[] victims);
     delegate void DelegateFish(Fish[] victims);
     delegate void DelegateReproduceAlga();
+    delegate void DelegateReport(string lineToAdd);
     class Aquarium
     {
         public Fish[] FishList { get; private set; }
         public Alga[] AlgaList { get; private set; }
+        public List<string> Report { get; private set; }
+
         private static Random RNG = new Random();// RNG for the aquarium
         private event DelegateAlga AttackHerb;
         private event DelegateReproduceAlga ReproduceAlga;
@@ -28,8 +31,16 @@ namespace Csharquarium.Models
             AttackCarn = null;
             ReproduceFish = null;
             ReproduceAlga = null;
+            Report = new List<string>();
         }
 
+        public void AddFish(string name) // add fishes to the aquarium
+        {
+            SpeciesEnum randomSpecie = (SpeciesEnum)RNG.Next(0, Enum.GetNames(typeof(SpeciesEnum)).Length);
+            Type type = Type.GetType("Csharquarium.Models.Species." + randomSpecie.ToString());
+            Fish newFish = (Fish)Activator.CreateInstance(type, name);
+            AddToArray(newFish);
+        }
         public void AddFish(string name, Genders gender) // add fishes to the aquarium
         {
             SpeciesEnum randomSpecie = (SpeciesEnum)RNG.Next(0, Enum.GetNames(typeof(SpeciesEnum)).Length);
@@ -37,11 +48,16 @@ namespace Csharquarium.Models
             Fish newFish = (Fish)Activator.CreateInstance(type, name, gender);
             AddToArray(newFish);
         }
-        public void AddFish(string name) // add fishes to the aquarium
+        public void AddFish(string name, SpeciesEnum specie, int age) // adding the fish by the console
         {
-            SpeciesEnum randomSpecie = (SpeciesEnum)RNG.Next(0, Enum.GetNames(typeof(SpeciesEnum)).Length);
-            Type type = Type.GetType("Csharquarium.Models.Species." + randomSpecie.ToString());
-            Fish newFish = (Fish)Activator.CreateInstance(type, name);
+            Type type = Type.GetType("Csharquarium.Models.Species." + specie.ToString());
+            Fish newFish = (Fish)Activator.CreateInstance(type, name, age);
+            AddToArray(newFish);
+        }
+        public void AddFish(string name, int age, int pv, Genders gender, string specie, bool wasAttacked, int target) // constructor with full parameters
+        {
+            Type type = Type.GetType(specie);
+            Fish newFish = (Fish)Activator.CreateInstance(type, name, age, pv, gender, wasAttacked, target);
             AddToArray(newFish);
         }
         public void AddAlga() //add algas to the aquarium
@@ -56,6 +72,7 @@ namespace Csharquarium.Models
         }
         private void AddToArray(LivingBeing newElement) // add new element to the right array
         {
+            newElement.ReportToAqua += AddToReport;
             if (newElement is Fish fish)
             {
                 List<Fish> newFishList = FishList.ToList(); // add fish to array
@@ -89,6 +106,7 @@ namespace Csharquarium.Models
             }
             newElement.death += RemoveDead; // Link the function that removes the element when it dies to the element's delegate
         }
+
         private void LivingBehaviour() //choose target from array
         {
             if (AlgaList.Length > 0) // if there is some alga
@@ -107,7 +125,6 @@ namespace Csharquarium.Models
                 AttackCarn(FishList); // make carnivores attack
                 ReproduceFish(FishList);// fish multiplying
             }
-
         }
 
         private void RemoveDead(LivingBeing dead) // removing an element from the scene
@@ -126,14 +143,14 @@ namespace Csharquarium.Models
                 }
                 ReproduceFish -= fish.Mate;
 
-                WriteLine(fish.name.ToString() + " died");
+                AddToReport(fish.name.ToString() + " died");
             }
             else if (dead is Alga alga)
             {
                 AlgaList = AlgaList.Where(diedAlga => diedAlga != dead).ToArray(); // remove from array all died algas
                 ReproduceAlga -= alga.Grow; // remove from general delegate the growing action
 
-                WriteLine("An alga disapeared");
+                AddToReport("An alga disapeared");
             }
             dead.Dispose(); // make the object disposable for garbage collector
         }
@@ -150,8 +167,12 @@ namespace Csharquarium.Models
         }
         public void ExecuteActions()
         {
+            //Report = new List<string>();
             LivingBehaviour();
             AddAge();
         }
+
+        public void AddToReport(string lineToAdd) // Add action to the report
+        { Report.Add(lineToAdd); }
     }
 }

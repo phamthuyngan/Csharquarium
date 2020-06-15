@@ -14,16 +14,18 @@ namespace Csharquarium.Models
         {
         }
         public Carnivore(string name, Genders gender) : base(name, gender)
-        {
-        }
+        { }
+        public Carnivore(string newName, int newAge) : base(newName, newAge) { }
         public Carnivore(string newName, Genders newGender, int age) : base(newName, newGender, age)
+        { }
+        public Carnivore(string newName, int age, int pv, Genders newGender, bool wasAttacked, int target) : base(newName, age, pv, newGender, wasAttacked, target)
         { }
 
         protected void Eat(Fish victim) //PV management when eating
         {
-                WriteLine(this.name + " bite " + victim.name);
-                victim.GetDamage(4);
-                this.GetHeal(5);
+            ReportToAqua(this.name + " bite " + victim.name);
+            victim.GetDamage(4);
+            this.GetHeal(5);
         }
         public void Attack(Fish[] victims)
         {

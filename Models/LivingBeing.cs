@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 namespace Csharquarium.Models
 {
     delegate void Death(LivingBeing dead);
-    
+
     class LivingBeing : IDisposable //class parent of fishes and algas
     {
-        
+
         public event Death death;
+        public DelegateReport ReportToAqua;
         protected static Random RNG = new Random(); // RNG for algas and fishes
         private int _age;
         private int _pv;
@@ -26,7 +27,7 @@ namespace Csharquarium.Models
                 if (value <= 0) // dead if not sufficient PV
                 {
                     _pv = 0;
-                    
+
                     death(this); // call the function that remove from list
                     return;
                 }
@@ -57,12 +58,14 @@ namespace Csharquarium.Models
             Age = 0;
             PV = 10;
             death = null;
+            ReportToAqua = null;
         }
         public LivingBeing(int newAge, int newPV)
         {
             Age = newAge;
             PV = newPV;
             death = null;
+            ReportToAqua = null;
         }
 
         public virtual void GetDamage(int damage)// receive damage
@@ -73,7 +76,7 @@ namespace Csharquarium.Models
             }
             else
             {
-                throw new InvalidOperationException("Your value must be positive");
+                Console.WriteLine("you can't inflict negative damage point you cheater!");
             }
         }
         public void GetHeal(int heal)//receive life point
@@ -84,7 +87,7 @@ namespace Csharquarium.Models
             }
             else
             {
-                throw new InvalidOperationException("Your value must be positive");
+                Console.WriteLine("you can't inflict negative heal point you cheater!");
             }
         }
 

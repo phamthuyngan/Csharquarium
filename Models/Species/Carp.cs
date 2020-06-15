@@ -11,6 +11,9 @@ namespace Csharquarium.Models.Species
     {
         public Carp(string name) : base(name) { }
         public Carp(string name, Genders gender) : base(name, gender) { }
+        public Carp(string newName, int newAge) : base(newName, newAge) { }
         public Carp(string newName, Genders newGender, int age) : base(newName, newGender, age) { }
+        public Carp(string newName, int age, int pv, Genders newGender, bool wasAttacked, int target) : base(newName, age, pv, newGender, wasAttacked, target)
+        { }
     }
 }

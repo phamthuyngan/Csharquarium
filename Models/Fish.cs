@@ -32,12 +32,23 @@ namespace Csharquarium.Models
             Gender = newGender;
             Reproduce = null;
         }
+        public Fish (string newName, int newAge) : this(newName)
+        {
+            Age = newAge;
+        }
         public Fish(string newName, Genders newGender, int age) : base(age, 10) // construct the Fish if we input an age value
         {
             name = newName;
             Gender = newGender;
             Reproduce = null;
             WasAttacked = false;
+        }
+        public Fish(string newName, int age, int pv, Genders newGender, bool wasAttacked, int target) : base(age, pv)
+        {
+            name = newName;
+            Gender = newGender;
+            WasAttacked = wasAttacked;
+            Target = target;
         }
         public Genders Gender // random gender 
         {
@@ -58,7 +69,7 @@ namespace Csharquarium.Models
             if (this is IHermaphrodite & Age > 0  & Age % 10 == 0 ) // Hermaphrodite behaviour when switch the gender by age
             {
                 _gender = !_gender;
-                Console.WriteLine(this.name + " changed gender, it's now a " + Gender.ToString());
+                ReportToAqua(this.name + " changed gender, it's now a " + Gender.ToString());
             }
         }
 
@@ -82,14 +93,26 @@ namespace Csharquarium.Models
                     if (this is IOpportunist & list[MateIndex].Gender == this.Gender)
                     {
                         _gender = !_gender;
-                        Console.WriteLine(this.name + " is now an opportunist, it's now a " + Gender.ToString());
+                        ReportToAqua(this.name + " is now an opportunist, it's now a " + Gender.ToString());
                     }
                     if (list[MateIndex].Gender != this.Gender)
                     {
                         Reproduce("Child", this);
+                        ReportToAqua(this.name + " reproduced with " + list[MateIndex].name);
                     }
                 }
             }
+        }
+        public string GetInfos()
+        {
+            string info = name + "\n" + 
+                Age.ToString() + "\n" + 
+                PV.ToString() + "\n" + 
+                Gender.ToString() + "\n" + 
+                this.GetType().ToString() + "\n" + 
+                WasAttacked.ToString() + "\n" + 
+                Target.ToString();
+            return info;
         }
     }
 }

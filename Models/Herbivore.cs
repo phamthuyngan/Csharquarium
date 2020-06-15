@@ -10,18 +10,19 @@ namespace Csharquarium.Models
     class Herbivore : Fish
     {
         public Herbivore(string name) : base(name)
-        {
-        }
+        {}
         public Herbivore(string name, Genders gender) : base(name, gender)
-        {
-        }
+        { }
+        public Herbivore(string newName, int newAge) : base(newName, newAge) { }
         public Herbivore(string newName, Genders newGender, int age) : base(newName, newGender, age)
-        {
-        }
+        {}
+        public Herbivore(string newName, int age, int pv, Genders newGender, bool wasAttacked, int target) : base(newName, age, pv, newGender, wasAttacked, target)
+        { }
         protected void Eat(Alga victim) // eat the alga
         {
             victim.GetDamage(2); // inflicts damage to victim
             this.GetHeal(3); // gets PV from eating
+            ReportToAqua(this.name + " ate alga");
         }
 
         public void Attack(Alga[] victims)

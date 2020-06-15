@@ -20,6 +20,7 @@ namespace Csharquarium.Models
         {
             GetHeal(1);
             Age++;
+            //ReportToAqua("Alga gets older");
         }
 
         public void Grow()
@@ -28,6 +29,7 @@ namespace Csharquarium.Models
             {
                 Reproduce(0, 5); // Create a new alga with 0 age and 5 PV
                 GetDamage(5);
+                ReportToAqua("Alga reproduced");
             }
         }
     }

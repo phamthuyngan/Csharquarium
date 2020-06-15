@@ -11,7 +11,10 @@ namespace Csharquarium.Models.Species
     {
         public Tuna(string name) : base(name) { }
         public Tuna(string name, Genders gender) : base(name, gender) { }
+        public Tuna(string newName, int newAge) : base(newName, newAge) { }
         public Tuna(string newName, Genders newGender, int age) : base(newName, newGender, age) { }
+        public Tuna(string newName, int age, int pv, Genders newGender, bool wasAttacked, int target) : base(newName, age, pv, newGender, wasAttacked, target)
+        { }
     }
 }
  
