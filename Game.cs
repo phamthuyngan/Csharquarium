@@ -15,8 +15,9 @@ namespace Csharquarium
         private Aquarium scene;
         private int turns;
         private FileManager saveManager;
-        private string saveDefaultPath = @"C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\Aquarium.save";
-        private string reportDefaultPath = @"C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\Aquarium_Report.save";
+
+        public string saveDefaultPath;
+        public string reportDefaultPath;
         public Renderer renderer { get; private set; }
 
         public Game()
@@ -25,6 +26,8 @@ namespace Csharquarium
             scene = new Aquarium();
             saveManager = new FileManager();
             renderer = new Renderer();
+            saveDefaultPath = null;
+            reportDefaultPath = null;
         }
 
         public void ShowGame() // show the content
@@ -47,7 +50,14 @@ namespace Csharquarium
         {
             turns++;
             scene.ExecuteActions(); // execute all behaviour in the aquium
-            saveManager.Save(reportDefaultPath, scene.Report); // save the actions made in the turn in another file
+            if (reportDefaultPath != null)
+            {
+                saveManager.Save(reportDefaultPath, scene.Report); // save the actions made in the turn in another file
+            }
+            else
+            {
+                throw new MissingFieldException("The default path is not encoded");
+            }
             ShowGame(); // make console show the game
         }
         public void AddAlga()
@@ -80,7 +90,14 @@ namespace Csharquarium
         }
         public void Save()
         {
-            Save(saveDefaultPath);
+            if (saveDefaultPath != null)
+            {
+                Save(saveDefaultPath);
+            }
+            else
+            {
+                throw new MissingFieldException("The default path is not encoded");
+            }
         }
         public void Save(string savePath)
         {
@@ -101,20 +118,29 @@ namespace Csharquarium
         }
         public void Load()
         {
-            Load(saveDefaultPath);
+            if (saveDefaultPath != null)
+            {
+                Load(saveDefaultPath);
+            }
+            else
+            {
+                throw new MissingFieldException("The default path is not encoded");
+            }
         }
         public void Load(string path)
         {
             string[] importedData = saveManager.Import(path);
             if (importedData == null)
             {
-                renderer.Render("Can't find the file");
-                return;
+                throw new FileNotFoundException("Can't find the file");
+                //renderer.Render("Can't find the file");
+                //return;
             }
             else if (importedData.Length < 3)
             {
-                renderer.Render("The save file is corrupted or doesn't contain the right informations");
-                return;
+                throw new InvalidDataException("The save file is corrupted or doesn't contain the right informations");
+                //renderer.Render("The save file is corrupted or doesn't contain the right informations");
+                //return;
             }
             scene = new Aquarium(); // create a new aquarium
             int.TryParse(importedData[0], out turns); // new value of turns
