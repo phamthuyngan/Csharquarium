@@ -1,11 +1,12 @@
 ﻿
+using Csharquarium.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace Csharquarium
 {
-    class SaveManager
+    class SaveManager : ISaveManager
     {
         FileManager fileManager;
         public SaveManager()

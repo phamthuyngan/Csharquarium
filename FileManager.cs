@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Csharquarium.Models.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace Csharquarium
 {
-    class FileManager
+    class FileManager : IFileManager
     {
         public void Save(string path, List<string> saveContent, string fileName)
         {

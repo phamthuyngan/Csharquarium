@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Csharquarium.Models.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Csharquarium
 {
-    class Renderer
+    class Renderer : IRenderer
     {
         public void Render()
         { Console.WriteLine(); }

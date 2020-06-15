@@ -49,8 +49,11 @@
     <Compile Include="Models\Carnivore.cs" />
     <Compile Include="Models\Fish.cs" />
     <Compile Include="Models\Herbivore.cs" />
+    <Compile Include="Models\Interfaces\IFileManager.cs" />
     <Compile Include="Models\Interfaces\IHermaphrodite.cs" />
     <Compile Include="Models\Interfaces\IOpportunist.cs" />
+    <Compile Include="Models\Interfaces\IRenderer.cs" />
+    <Compile Include="Models\Interfaces\ISaveManager.cs" />
     <Compile Include="Models\LivingBeing.cs" />
     <Compile Include="Models\Species\Bar.cs" />
     <Compile Include="Models\Species\Carp.cs" />
