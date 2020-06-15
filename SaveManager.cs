@@ -12,9 +12,9 @@ namespace Csharquarium
         {
             fileManager = new FileManager();
         }
-        public void Save(string path, List<string> saveContent)
+        public void Save(string path, List<string> saveContent, string fileName)
         {
-            fileManager.Save(path, saveContent); // écris dans le document toutes les strings dans saveInfos
+            fileManager.Save(path, saveContent, fileName); // écris dans le document toutes les strings dans saveInfos
         }
         public string[] Import(string path)
         {

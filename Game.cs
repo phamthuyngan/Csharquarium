@@ -9,7 +9,6 @@ namespace Csharquarium
     {
 
         public string saveDefaultPath;
-        public string reportDefaultPath;
         public Renderer renderer { get; private set; }
 
         private Aquarium scene;
@@ -22,7 +21,6 @@ namespace Csharquarium
             saveManager = new SaveManager();
             renderer = new Renderer();
             saveDefaultPath = null;
-            reportDefaultPath = null;
         }
 
         public void ShowGame() // show the content
@@ -45,9 +43,9 @@ namespace Csharquarium
         {
             turns++;
             scene.ExecuteActions(); // execute all behaviour in the aquium
-            if (reportDefaultPath != null)
+            if (saveDefaultPath != null)
             {
-                saveManager.Save(reportDefaultPath, scene.Report); // save the actions made in the turn in another file
+                saveManager.Save(saveDefaultPath, scene.Report, "Aquarium_Report.save"); // save the actions made in the turn in another file
             }
             else
             {
@@ -108,7 +106,7 @@ namespace Csharquarium
             {
                 saveContent.Add(alga.Age + "\n" + alga.PV);
             }
-            saveManager.Save(savePath, saveContent);
+            saveManager.Save(savePath, saveContent, "Aquarium.save");
             renderer.Render("Save successfully saved");
         }
         public void Load()

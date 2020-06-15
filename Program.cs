@@ -18,8 +18,7 @@ namespace Csharquarium
         static void Main(string[] args)
         {
             Game game = new Game();
-            game.saveDefaultPath = @"C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\Aquarium.save";
-            game.reportDefaultPath = @"C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\Aquarium_Report.save";
+            game.saveDefaultPath = @"C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\";
 
             string input = null;
             string path = null;

@@ -6,11 +6,11 @@ namespace Csharquarium
 {
     class FileManager
     {
-        public void Save(string path, List<string> saveContent)
+        public void Save(string path, List<string> saveContent, string fileName)
         {
             if (Directory.Exists(path))
             {
-                File.WriteAllLines(path, saveContent); // écris dans le document toutes les strings dans saveInfos
+                File.WriteAllLines(path + fileName, saveContent); // écris dans le document toutes les strings dans saveInfos
             }
             else
             {
