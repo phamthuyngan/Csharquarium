@@ -14,7 +14,7 @@ namespace Csharquarium
     {
         private Aquarium scene;
         private int turns;
-        private SaveManager saveManager;
+        private FileManager saveManager;
         private string saveDefaultPath = @"C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\Aquarium.save";
         private string reportDefaultPath = @"C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\Aquarium_Report.save";
         public Renderer renderer { get; private set; }
@@ -23,7 +23,7 @@ namespace Csharquarium
         {
             turns = 0;
             scene = new Aquarium();
-            saveManager = new SaveManager();
+            saveManager = new FileManager();
             renderer = new Renderer();
         }
 

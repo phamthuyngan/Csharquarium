@@ -76,7 +76,7 @@ namespace Csharquarium.Models
             }
             else
             {
-                Console.WriteLine("you can't inflict negative damage point you cheater!");
+                throw new InvalidOperationException("You can't inflict negative damage point you cheater!");
             }
         }
         public void GetHeal(int heal)//receive life point
@@ -87,7 +87,7 @@ namespace Csharquarium.Models
             }
             else
             {
-                Console.WriteLine("you can't inflict negative heal point you cheater!");
+                throw new InvalidOperationException("You can't inflict negative heal point you cheater!");
             }
         }
 

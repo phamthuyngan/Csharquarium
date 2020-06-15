@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Csharquarium
 {
-    class SaveManager
+    class FileManager
     {
 
         public void Save(string path, List<string> saveContent)

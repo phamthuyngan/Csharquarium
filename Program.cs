@@ -158,7 +158,6 @@ namespace Csharquarium
                         break;
                 }
             } while (input != "x");
-
         }
     }
 }
