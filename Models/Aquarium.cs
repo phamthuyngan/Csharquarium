@@ -108,7 +108,7 @@ namespace Csharquarium.Models
         { Report.Add(lineToAdd); }
         public void ExecuteActions()
         {
-            //Report = new List<string>();
+            Report = new List<string>();
             LivingBehaviour();
             AddAge();
         }

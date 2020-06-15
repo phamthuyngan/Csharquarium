@@ -18,7 +18,7 @@ namespace Csharquarium
         static void Main(string[] args)
         {
             Game game = new Game();
-            game.saveDefaultPath = @"C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\";
+            game.saveDefaultPath = @"C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\"; // default directory to save 
 
             string input = null;
             string path = null;
@@ -39,6 +39,7 @@ namespace Csharquarium
             //game.AddFish("Gupi", Genders.Female);
             //game.AddFish("Test");
             game.ShowGame();
+            Console.WriteLine("Press ENTER to start the game");
 
             do
             {
