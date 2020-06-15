@@ -1,30 +1,25 @@
 ﻿using Csharquarium.Models;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Console;
 
 namespace Csharquarium
 {
     class Game
     {
-        private Aquarium scene;
-        private int turns;
-        private FileManager saveManager;
 
         public string saveDefaultPath;
         public string reportDefaultPath;
         public Renderer renderer { get; private set; }
 
+        private Aquarium scene;
+        private int turns;
+        private SaveManager saveManager;
         public Game()
         {
             turns = 0;
             scene = new Aquarium();
-            saveManager = new FileManager();
+            saveManager = new SaveManager();
             renderer = new Renderer();
             saveDefaultPath = null;
             reportDefaultPath = null;
@@ -130,21 +125,12 @@ namespace Csharquarium
         public void Load(string path)
         {
             string[] importedData = saveManager.Import(path);
-            if (importedData == null)
-            {
-                throw new FileNotFoundException("Can't find the file");
-                //renderer.Render("Can't find the file");
-                //return;
-            }
-            else if (importedData.Length < 3)
-            {
-                throw new InvalidDataException("The save file is corrupted or doesn't contain the right informations");
-                //renderer.Render("The save file is corrupted or doesn't contain the right informations");
-                //return;
-            }
+
             scene = new Aquarium(); // create a new aquarium
+
             int.TryParse(importedData[0], out turns); // new value of turns
             int.TryParse(importedData[1], out int numberOfFish); // get the number of fishes
+
             for (int i = 0; i < numberOfFish; i++)
             {
                 int startIndex = (i * 7) + 2; // where to start to take parameters for fishes
@@ -158,7 +144,9 @@ namespace Csharquarium
                     int.Parse(importedData[startIndex + 6])//target
                     );
             }
+
             int numberOfAlgas = int.Parse(importedData[numberOfFish * 7 + 2]);
+
             for (int i = 0; i < numberOfAlgas; i++)
             {
                 int startIndex = (i * 2) + 3 + (numberOfFish * 7); // where to start to take parameters for algas

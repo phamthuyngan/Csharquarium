@@ -8,12 +8,12 @@ namespace Csharquarium
 {
     class Renderer
     {
+        public void Render()
+        { Console.WriteLine(); }
         public void Render(string input)
         {
             Console.WriteLine(input);
         }
-        public void Render()
-        { Console.WriteLine(); }
         public void Clear()
         {
             Console.Clear();

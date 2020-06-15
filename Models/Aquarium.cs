@@ -1,9 +1,6 @@
-﻿using Csharquarium.Models.Interfaces;
-using System;
-using System.CodeDom;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using static System.Console;
 
 namespace Csharquarium.Models
 {
@@ -107,6 +104,14 @@ namespace Csharquarium.Models
             newElement.death += RemoveDead; // Link the function that removes the element when it dies to the element's delegate
         }
 
+        public void AddToReport(string lineToAdd) // Add action to the report
+        { Report.Add(lineToAdd); }
+        public void ExecuteActions()
+        {
+            //Report = new List<string>();
+            LivingBehaviour();
+            AddAge();
+        }
         private void LivingBehaviour() //choose target from array
         {
             if (AlgaList.Length > 0) // if there is some alga
@@ -165,14 +170,6 @@ namespace Csharquarium.Models
                 fish.AddAge();
             }
         }
-        public void ExecuteActions()
-        {
-            //Report = new List<string>();
-            LivingBehaviour();
-            AddAge();
-        }
 
-        public void AddToReport(string lineToAdd) // Add action to the report
-        { Report.Add(lineToAdd); }
     }
 }

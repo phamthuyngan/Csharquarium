@@ -1,9 +1,6 @@
 ﻿using Csharquarium.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Csharquarium
 {
@@ -23,6 +20,7 @@ namespace Csharquarium
             Game game = new Game();
             game.saveDefaultPath = @"C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\Aquarium.save";
             game.reportDefaultPath = @"C:\Users\ngan2\Documents\interface3\CS\OrienteObjet\Csharquarium\Aquarium_Report.save";
+
             string input = null;
             string path = null;
             string ageString = null;
